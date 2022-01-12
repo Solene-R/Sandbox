@@ -1,0 +1,4 @@
+[submodule "Aldais/demo"]
+	path = Aldais/demo
+	url = git@github.com:Aldais/demo.git
+	branch = Avanteam
