@@ -1,28 +1,41 @@
 <odoo>
-  <data>
+  <data>          
+          <!-- explicit list view definition -->
+      
+    <record model="ir.ui.view" id="cockpit_integration.com_list">
+      <field name="name">Communication Arrangements list</field>
+      <field name="model">cockpit_integration.com_arrangement</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="id"/>
+          <field name="operation"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="cockpit_integration.action_window">
+        <field name="name">Communication Arrangements window</field>
+        <field name="res_model">cockpit_integration.com_arrangement</field>
+        <field name="view_mode">tree,form</field>
+     </record>
+
           <!-- Top menu item -->
-
-    <menuitem name="cockpit_integration" id="cockpit_integration.menu_root"/>
-
+    <menuitem name="Integration cockpit" id="cockpit_integration.menu_root"/>
+      
     <!-- menu categories -->
-
-    <menuitem name="Menu 1" id="cockpit_integration.menu_1" parent="cockpit_integration.menu_root"/>
-    <menuitem name="Menu 2" id="cockpit_integration.menu_2" parent="cockpit_integration.menu_root"/>
-
-    <!-- actions -->
-
-    <menuitem name="List" id="cockpit_integration.menu_1_list" parent="cockpit_integration.menu_1"
-              action="cockpit_integration.action_window"/>
-    <menuitem name="Server to list" id="cockpit_integration" parent="cockpit_integration.menu_2"
-              action="cockpit_integration.action_server"/>
-
+    <menuitem name="Communication Arrangements List" id="cockpit_integration.menu_1" parent="cockpit_integration.menu_root"/>
+    
+      <!-- actions -->
+    <menuitem name="List" id="cockpit_integration.menu_1_list" parent="cockpit_integration.menu_1" action="cockpit_integration.action_window"/>
       
       
     <!-- explicit list view definition -->
 <!--
-    <record model="ir.ui.view" id="cockpit_integration.list">
-      <field name="name">cockpit_integration list</field>
-      <field name="model">cockpit_integration.cockpit_integration</field>
+    <record model="ir.ui.view" id="time_entry__limit.list">
+      <field name="name">TimeEntry_Limit list</field>
+      <field name="model">time_entry__limit.time_entry__limit</field>
       <field name="arch" type="xml">
         <tree>
           <field name="name"/>
@@ -35,18 +48,18 @@
 
     <!-- actions opening views on models -->
 <!--
-    <record model="ir.actions.act_window" id="cockpit_integration.action_window">
-      <field name="name">cockpit_integration window</field>
-      <field name="res_model">cockpit_integration.cockpit_integration</field>
+    <record model="ir.actions.act_window" id="time_entry__limit.action_window">
+      <field name="name">TimeEntry_Limit window</field>
+      <field name="res_model">time_entry__limit.time_entry__limit</field>
       <field name="view_mode">tree,form</field>
     </record>
 -->
 
     <!-- server action to the one above -->
 <!--
-    <record model="ir.actions.server" id="cockpit_integration.action_server">
-      <field name="name">cockpit_integration server</field>
-      <field name="model_id" ref="model_cockpit_integration_cockpit_integration"/>
+    <record model="ir.actions.server" id="time_entry__limit.action_server">
+      <field name="name">TimeEntry_Limit server</field>
+      <field name="model_id" ref="model_time_entry__limit_time_entry__limit"/>
       <field name="state">code</field>
       <field name="code">
         action = {
@@ -60,19 +73,19 @@
 
     <!-- Top menu item -->
 <!--
-    <menuitem name="cockpit_integration" id="cockpit_integration.menu_root"/>
+    <menuitem name="TimeEntry_Limit" id="time_entry__limit.menu_root"/>
 -->
     <!-- menu categories -->
 <!--
-    <menuitem name="Menu 1" id="cockpit_integration.menu_1" parent="cockpit_integration.menu_root"/>
-    <menuitem name="Menu 2" id="cockpit_integration.menu_2" parent="cockpit_integration.menu_root"/>
+    <menuitem name="Menu 1" id="time_entry__limit.menu_1" parent="time_entry__limit.menu_root"/>
+    <menuitem name="Menu 2" id="time_entry__limit.menu_2" parent="time_entry__limit.menu_root"/>
 -->
     <!-- actions -->
 <!--
-    <menuitem name="List" id="cockpit_integration.menu_1_list" parent="cockpit_integration.menu_1"
-              action="cockpit_integration.action_window"/>
-    <menuitem name="Server to list" id="cockpit_integration" parent="cockpit_integration.menu_2"
-              action="cockpit_integration.action_server"/>
+    <menuitem name="List" id="time_entry__limit.menu_1_list" parent="time_entry__limit.menu_1"
+              action="time_entry__limit.action_window"/>
+    <menuitem name="Server to list" id="time_entry__limit" parent="time_entry__limit.menu_2"
+              action="time_entry__limit.action_server"/>
 -->
   </data>
 </odoo>
