@@ -1,23 +1,72 @@
 <odoo>
-  <data>          
-          <!-- explicit list view definition -->
-      
-    <record model="ir.ui.view" id="cockpit_integration.com_list">
-      <field name="name">Communication Arrangements list</field>
-      <field name="model">cockpit_integration.com_arrangement</field>
+  <data>
+      <!-- Tracking Form -->
+      <record id="cockpit_integration.track_form" model="ir.ui.view">
+          <field name="name">Tracking</field>
+          <field name="model">cockpit_integration.track</field>
+          <field name="arch" type="xml">
+              <form>
+                  <group>
+                      <field name ="originDocId"/>
+                      <field name ="originDocType"/>
+                      <field name ="direction"/>
+                      <field name ="operation"/>
+                      <field name ="targetUrl"/>
+                      <field name ="date"/>
+                      <field name ="returnCode"/>
+                      <field name ="requestHeader"/>
+                      <field name ="requestBody"/>
+                      <field name="status"/>
+                      <field name ="log" string="Logs">
+                          <tree string="Logs" editable="bottom">
+                              <field name ="logMsg"/>
+                          </tree>
+                      </field>
+                  </group>
+              </form>
+          </field>
+      </record>
+
+      <!-- explicit list view definition -->
+    
+    <record model="ir.ui.view" id="cockpit_integration.track_list">
+      <field name="name">Tracking</field>
+      <field name="model">cockpit_integration.track</field>
       <field name="arch" type="xml">
         <tree>
-          <field name="id"/>
+          <field name="originDocType"/>
+          <field name="originDocId"/>
+          <field name="direction"/>
           <field name="operation"/>
+            <field name="status"/>
+          <field name="date"/>
         </tree>
       </field>
     </record>
-
+      
+    <record model="ir.ui.view" id="cockpit_integration.com_list">
+      <field name="name">Communication Arrangements</field>
+      <field name="model">cockpit_integration.com_arrangement</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="operation"/>
+          <field name="formats"/>
+          <field name="status"/>            
+        </tree>
+      </field>
+    </record>
+      
     <!-- actions opening views on models -->
 
-    <record model="ir.actions.act_window" id="cockpit_integration.action_window">
+    <record model="ir.actions.act_window" id="cockpit_integration.action_window_com">
         <field name="name">Communication Arrangements window</field>
         <field name="res_model">cockpit_integration.com_arrangement</field>
+        <field name="view_mode">tree,form</field>
+     </record>
+      
+    <record model="ir.actions.act_window" id="cockpit_integration.action_window_track">
+        <field name="name">Tracking window</field>
+        <field name="res_model">cockpit_integration.track</field>
         <field name="view_mode">tree,form</field>
      </record>
 
@@ -25,11 +74,25 @@
     <menuitem name="Integration cockpit" id="cockpit_integration.menu_root"/>
       
     <!-- menu categories -->
-    <menuitem name="Communication Arrangements List" id="cockpit_integration.menu_1" parent="cockpit_integration.menu_root"/>
-    
+    <menuitem name="Communication Arrangements " id="cockpit_integration.menu_1" parent="cockpit_integration.menu_root" sequence="2"/>
+    <menuitem name="Tracking" id="cockpit_integration.menu_2" parent="cockpit_integration.menu_root" sequence="1"/>
+   
       <!-- actions -->
-    <menuitem name="List" id="cockpit_integration.menu_1_list" parent="cockpit_integration.menu_1" action="cockpit_integration.action_window"/>
+    <menuitem name="All communication arrangements" id="cockpit_integration.menu_1_list" parent="cockpit_integration.menu_1" action="cockpit_integration.action_window_com"/>
+    <menuitem name="All trackings" id="cockpit_integration.menu_2_list" parent="cockpit_integration.menu_2" action="cockpit_integration.action_window_track"/>
       
+      
+    <!-- inherit invoice view and add an API button-->
+        <record id="account_move_inherited" model="ir.ui.view">
+            <field name="name">account.move.view.inherited</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <button name="button_cancel" position="after">
+                    <button name="apicall" string="API" type="object"/>
+                </button>
+            </field>
+        </record>
       
     <!-- explicit list view definition -->
 <!--

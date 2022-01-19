@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_cockpit_integration_cockpit_integration,cockpit_integration.cockpit_integration,model_cockpit_integration_com_arrangement,base.group_user,1,1,1,1
+access_cockpit_integration_com,cockpit_integration.com,model_cockpit_integration_com_arrangement,base.group_user,1,1,1,1
+access_cockpit_integration_track,cockpit_integration.track,model_cockpit_integration_track,base.group_user,1,1,1,1
+access_cockpit_integration_log,cockpit_integration.log,model_cockpit_integration_log,base.group_user,1,1,1,1
