@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+          <record id="com1" model="cockpit_integration.com_arrangement">
+            <field name="name">operation</field>
+            <field name="value">"TO_BE_NAMED"</field>
+            <field name="name">status</field>
+            <field name="value">I</field>
+          </record>
+    </data>
+</odoo>

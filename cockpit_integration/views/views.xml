@@ -1,25 +1,79 @@
 <odoo>
   <data>
-      <!-- Tracking Form -->
+      <!-- Form View Tracking -->
       <record id="cockpit_integration.track_form" model="ir.ui.view">
           <field name="name">Tracking</field>
           <field name="model">cockpit_integration.track</field>
           <field name="arch" type="xml">
+              <xpath expr="//form//sheet" position="before">
+                  <header>
+                      <button name="resend" string="Resend" type="object" class="oe_highlight"/>
+                  </header>
+              </xpath>
+              <form create="false" edit="false">
+                  <group col='2'>
+                      <group>
+                          <field name ="originDocId"/>
+                          <field name ="originDocType"/>
+                          <field name ="operation"/>
+                          <field name ="direction"/>
+                          <field name ="targetUrl"/>
+                      </group>
+                      <group>
+                          <field name="status" widget="badge" decoration-success="status=='Success'" decoration-danger="status=='Error'"/>
+                          <field name ="date"/>
+                          <field name ="resendDate"/>
+                          <field name ="returnCode"/>
+                          <field name ="returnReason"/>
+                      </group>
+                    </group>
+                    <group col='2'>
+                      <group string="Request">
+                          <field name ="requestHeader"/>
+                          <field name ="requestBody"/>  
+                      </group>
+                      <group string="Answer">
+                          <field name ="returnText"/>
+                          <field name ="log" string="Logs" editable="false">
+                              <tree string="Logs" create="false" delete="false">
+                                  <field name ="logMsg"/>
+                              </tree>
+                          </field>
+                      </group>
+                </group>      
+              </form>
+          </field>
+      </record>
+      
+            <!-- Form View Communication Arrangements -->
+      <record id="cockpit_integration.com_arrangement_form" model="ir.ui.view">
+          <field name="name">Communication Arrangement</field>
+          <field name="model">cockpit_integration.com_arrangement</field>
+          <field name="arch" type="xml">
               <form>
-                  <group>
-                      <field name ="originDocId"/>
-                      <field name ="originDocType"/>
-                      <field name ="direction"/>
-                      <field name ="operation"/>
-                      <field name ="targetUrl"/>
-                      <field name ="date"/>
-                      <field name ="returnCode"/>
-                      <field name ="requestHeader"/>
-                      <field name ="requestBody"/>
-                      <field name="status"/>
-                      <field name ="log" string="Logs">
-                          <tree string="Logs" editable="bottom">
-                              <field name ="logMsg"/>
+                  <group col='2'>
+                      <group>
+                          <field name ="operation"/>
+                          <field name ="endpoint"/>
+                          <field name ="direction"/>
+                          <field name ="formats"/>
+                          <field name ="originDocType"/>
+                          <field name="status"/>
+                      </group>
+                      <group>
+                          <field name ="identification"/>
+                          <field name ="user"/>
+                          <field name ="password"/>
+                          <field name ="needToken"/>                         
+                          <field name ="failContact"/>
+                          <field name ="failEmail"/>
+                      </group>
+                      </group>
+                      <group>
+                      <field name ="headers" string="Headers">
+                          <tree string="Headers" editable="bottom">
+                              <field name ="key"/>
+                              <field name ="value"/>
                           </tree>
                       </field>
                   </group>
@@ -28,22 +82,23 @@
       </record>
 
       <!-- explicit list view definition -->
-    
+    <!-- List view Tracking -->
     <record model="ir.ui.view" id="cockpit_integration.track_list">
       <field name="name">Tracking</field>
       <field name="model">cockpit_integration.track</field>
       <field name="arch" type="xml">
-        <tree>
+        <tree create="false" default_order="date desc">
           <field name="originDocType"/>
           <field name="originDocId"/>
           <field name="direction"/>
           <field name="operation"/>
-            <field name="status"/>
+            <field name="status" widget="badge" decoration-success="status=='Success'" decoration-danger="status=='Error'"/>
           <field name="date"/>
         </tree>
       </field>
     </record>
-      
+    
+      <!-- List view Communication Arrangements -->
     <record model="ir.ui.view" id="cockpit_integration.com_list">
       <field name="name">Communication Arrangements</field>
       <field name="model">cockpit_integration.com_arrangement</field>
@@ -57,20 +112,20 @@
     </record>
       
     <!-- actions opening views on models -->
-
+    <!-- actions opening Communication Arrangements -->
     <record model="ir.actions.act_window" id="cockpit_integration.action_window_com">
         <field name="name">Communication Arrangements window</field>
         <field name="res_model">cockpit_integration.com_arrangement</field>
         <field name="view_mode">tree,form</field>
      </record>
-      
-    <record model="ir.actions.act_window" id="cockpit_integration.action_window_track">
+    <!-- actions opening Tracking -->
+        <record model="ir.actions.act_window" id="cockpit_integration.action_window_track">
         <field name="name">Tracking window</field>
         <field name="res_model">cockpit_integration.track</field>
         <field name="view_mode">tree,form</field>
      </record>
 
-          <!-- Top menu item -->
+    <!-- Top menu item -->
     <menuitem name="Integration cockpit" id="cockpit_integration.menu_root"/>
       
     <!-- menu categories -->
@@ -90,7 +145,7 @@
             <field name="arch" type="xml">
                 <button name="button_cancel" position="after">
                     <button name="apicall" string="API" type="object"/>
-                </button>
+                </button>                 
             </field>
         </record>
       
@@ -149,6 +204,20 @@
               action="time_entry__limit.action_window"/>
     <menuitem name="Server to list" id="time_entry__limit" parent="time_entry__limit.menu_2"
               action="time_entry__limit.action_server"/>
+
+Video trial :
+<field name="video_url"/>
+<field name="embed_code" class="mt-2" widget="video_preview"/>    
+    @api.depends('video_url')
+    def _compute_embed_code(self):
+        for record in self:
+            record.embed_code = get_video_embed_code(record.video_url)
+    
+    video_url = fields.Char(default="https://i.gifer.com/F6qZ.gif")
+    embed_code = fields.Char(compute="_compute_embed_code")
+
+from odoo.addons.website.tools import get_video_embed_code
+
 -->
   </data>
 </odoo>
