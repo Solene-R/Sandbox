@@ -46,6 +46,7 @@ class com_arrangement(models.Model):
     ## Appel d'API
     def _api_launch_post(self, body, originDocId):
         for record in self:
+            ## Initialization
             ##DEV-01-AC-04-01 		URL correspond au endpoint du communication arrangement
             url = self.endpoint
             ##DEV-01-AC-04-02 		Le user correspond au user du communication arrangement
@@ -58,10 +59,24 @@ class com_arrangement(models.Model):
                 requHeaders[header.key] = header.value
             ## body
             json_data = body 
+            
+            ## API GET call
+            if (record.needToken):
+                ## inherit communication arrangement headers
+                requHeadersGet = requHeaders
+                ## add header to fetch token
+                requHeadersGet['token'] = 'fetch'   ## !!!!!! Right syntaxe to update
+                ## get call
+                responseGet = requests.get(url, data=json.dumps('{}'), auth=HTTPBasicAuth(user, pwd), headers=requHeadersGet)
+                ## parse get response
+                myToken = responseGet.headers.get('x-iplb-request-id', default = None)   ## !!!!!! Right syntaxe to update
+            
             ## API POST call
+            ## pass token
+            ## post cal
             response = requests.post(url, data=json.dumps(json_data), auth=HTTPBasicAuth(user, pwd), headers=requHeaders)
 
-                        ##DEV-01-AC-01 	3	 Création du tracking 
+            ##DEV-01-AC-01 	3	 Création du tracking 
             if (response.ok):
                 status = 'Success'
             else:
@@ -69,13 +84,17 @@ class com_arrangement(models.Model):
             self.env['cockpit_integration.track'].create(
             {
                 'status' : status,
-                'originDocId' : originDocId, ##!!!!!!!!!!!!!!!!!!!
-                'originDocType' : self.originDocType,##!!!!!!!!!!!!!!!!!!!
+                'token' : myToken,
+                'originDocId' : originDocId,
+                'originDocType' : self.originDocType,
                 'direction' : self.direction,
                 'operation' : self.operation,
                 'targetUrl' : url,
                 'date' : fields.datetime.now(),
-                'returnCode' : response.status_code,
+                'returnCode' : response.status_code, 
+                'returnReason' : response.reason,
+                'returnHeaders' : response.headers,                
+                'returnText' : response.text,
                 'requestHeader' : requHeaders,
                 'requestBody' : json_data
             }
@@ -85,9 +104,6 @@ class com_arrangement(models.Model):
             return response
 
         
-        
-
-    
 class com_header(models.Model):
     ##---------------------------------Fields---------------------------------
     _name = 'cockpit_integration.com_header'
