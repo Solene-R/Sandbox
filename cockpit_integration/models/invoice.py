@@ -7,10 +7,11 @@ class customerinvoice(models.Model):
     def apicall(self):
         for record in self:
             ## Retreieve communication arrangement
-            arrangement = self.env['cockpit_integration.com_arrangement'].search([('operation', '=', 'INV_SAGE_01')]) 
+            arrangement = self.env['cockpit_integration.com_arrangement'].search([('operation', '=', 'New_Material_ByD')]) 
             ## Define body
             body = {
-                "id": record.name,
+                "InternalID":"TEST01",
+                "ProductCategoryInternalID":"192"
             }
             ## call _api_launch_post method from communication arrangement
             answer = arrangement._api_launch_post(body, record.id)

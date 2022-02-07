@@ -60,19 +60,26 @@
                       <group>
                           <field name ="identification"/>
                           <field name ="user"/>
-                          <field name ="password"/>
-                          <field name ="needToken"/>                         
+                          <field name ="password" password="True"/>                   
                           <field name ="failContact"/>
                           <field name ="failEmail"/>
                       </group>
                       </group>
-                      <group>
-                      <field name ="headers" string="Headers">
-                          <tree string="Headers" editable="bottom">
-                              <field name ="key"/>
-                              <field name ="value"/>
-                          </tree>
-                      </field>
+                     <group col='2'>
+                      <group string="Token management">
+                          <field name ="needToken"/>                         
+                          <field name ="tokenHeaderKey" attrs="{'invisible':[('needToken', '=', False)]}"/>
+                          <field name ="tokenHeaderValue" attrs="{'invisible':[('needToken', '=', False)]}"/>
+                          <field name ="tokenHeaderKeyPost" attrs="{'invisible':[('needToken', '=', False)]}"/>
+                      </group>
+                      <group string="Headers">
+                          <field name ="headers">
+                              <tree editable="bottom">
+                                  <field name ="key"/>
+                                  <field name ="value"/>
+                              </tree>
+                          </field>
+                        </group>
                   </group>
               </form>
           </field>

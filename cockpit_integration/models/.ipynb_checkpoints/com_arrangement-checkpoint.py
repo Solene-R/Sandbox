@@ -34,6 +34,9 @@ class com_arrangement(models.Model):
     originDocType = fields.Char(string='Origin document type')
     ## Need for token
     needToken = fields.Boolean(string='Need to get token first')
+    tokenHeaderKey  = fields.Char(string='Token GET Header Key')
+    tokenHeaderValue  = fields.Char(string='Token GET Header Value')
+    tokenHeaderKeyPost  = fields.Char(string='Token POST Header Key')
     ## DEV-01-DB-05 		 Com Headers 
     headers = fields.One2many('cockpit_integration.com_header', 'arrangement', string = 'Header')
     
@@ -47,6 +50,7 @@ class com_arrangement(models.Model):
     def _api_launch_post(self, body, originDocId):
         for record in self:
             ## Initialization
+            myToken = ''
             ##DEV-01-AC-04-01 		URL correspond au endpoint du communication arrangement
             url = self.endpoint
             ##DEV-01-AC-04-02 		Le user correspond au user du communication arrangement
@@ -65,15 +69,17 @@ class com_arrangement(models.Model):
                 ## inherit communication arrangement headers
                 requHeadersGet = requHeaders
                 ## add header to fetch token
-                requHeadersGet['token'] = 'fetch'   ## !!!!!! Right syntaxe to update
+                requHeadersGet[record.tokenHeaderKey] = record.tokenHeaderValue 
                 ## get call
                 responseGet = requests.get(url, data=json.dumps('{}'), auth=HTTPBasicAuth(user, pwd), headers=requHeadersGet)
                 ## parse get response
-                myToken = responseGet.headers.get('x-iplb-request-id', default = None)   ## !!!!!! Right syntaxe to update
+                myToken = responseGet.headers.get(record.tokenHeaderKey, default = None)
+                ## pass token to POST headers
+                requHeaders[record.tokenHeaderKeyPost] = myToken 
             
             ## API POST call
-            ## pass token
-            ## post cal
+            ## post call
+            ##requHeaders['x-csrf-token'] = '3O1qA-DbmytgfHiP7vNLhA=='
             response = requests.post(url, data=json.dumps(json_data), auth=HTTPBasicAuth(user, pwd), headers=requHeaders)
 
             ##DEV-01-AC-01 	3	 Création du tracking 
@@ -92,10 +98,10 @@ class com_arrangement(models.Model):
                 'targetUrl' : url,
                 'date' : fields.datetime.now(),
                 'returnCode' : response.status_code, 
-                'returnReason' : response.reason,
-                'returnHeaders' : response.headers,                
+                'returnReason' : response.reason, 
+                'returnHeaders' : response.cookies,##response.headers,                
                 'returnText' : response.text,
-                'requestHeader' : requHeaders,
+                'requestHeader' : responseGet.cookies,##requHeaders,
                 'requestBody' : json_data
             }
             )
