@@ -10,7 +10,7 @@ class customerinvoice(models.Model):
             arrangement = self.env['cockpit_integration.com_arrangement'].search([('operation', '=', 'New_Material_ByD')]) 
             ## Define body
             body = {
-                "InternalID":"TEST01",
+                "InternalID":"TEST08",
                 "ProductCategoryInternalID":"192"
             }
             ## call _api_launch_post method from communication arrangement

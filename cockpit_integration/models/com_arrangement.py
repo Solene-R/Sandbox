@@ -76,11 +76,13 @@ class com_arrangement(models.Model):
                 myToken = responseGet.headers.get(record.tokenHeaderKey, default = None)
                 ## pass token to POST headers
                 requHeaders[record.tokenHeaderKeyPost] = myToken 
+                
             
             ## API POST call
             ## post call
+            ## cookies management : cookies are necessary to prevent the session ID to change            
             ##requHeaders['x-csrf-token'] = '3O1qA-DbmytgfHiP7vNLhA=='
-            response = requests.post(url, data=json.dumps(json_data), auth=HTTPBasicAuth(user, pwd), headers=requHeaders)
+            response = requests.post(url, data=json.dumps(json_data), auth=HTTPBasicAuth(user, pwd), headers=requHeaders, cookies=responseGet.cookies)
 
             ##DEV-01-AC-01 	3	 Création du tracking 
             if (response.ok):
@@ -99,9 +101,9 @@ class com_arrangement(models.Model):
                 'date' : fields.datetime.now(),
                 'returnCode' : response.status_code, 
                 'returnReason' : response.reason, 
-                'returnHeaders' : response.cookies,##response.headers,                
+                'returnHeaders' : response.headers,                
                 'returnText' : response.text,
-                'requestHeader' : responseGet.cookies,##requHeaders,
+                'requestHeader' : requHeaders,
                 'requestBody' : json_data
             }
             )

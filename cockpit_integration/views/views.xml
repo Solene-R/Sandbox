@@ -7,7 +7,7 @@
           <field name="arch" type="xml">
               <xpath expr="//form//sheet" position="before">
                   <header>
-                      <button name="resend" string="Resend" type="object" class="oe_highlight"/>
+                      <button name="resend" string="Resend" type="object" class="oe_highlight" invisible="1" />
                   </header>
               </xpath>
               <form create="false" edit="false">
@@ -23,7 +23,7 @@
                           <field name="status" widget="badge" decoration-success="status=='Success'" decoration-danger="status=='Error'"/>
                           <field name ="date"/>
                           <field name ="token"/>
-                          <field name ="resendDate"/>
+                          <field name ="resendDate" invisible="1" />
                           <field name ="returnCode"/>
                           <field name ="returnReason"/>
                       </group>

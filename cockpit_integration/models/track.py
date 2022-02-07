@@ -41,13 +41,13 @@ class track(models.Model):
     token = fields.Text(string='Token from get call')
     
     ##---------------------------------Methods---------------------------------
-
+    ## UNUSED SO FAR
     def resend(self):
         for record in self:
             ## Retreieve communication arrangement
             arrangement = self.env['cockpit_integration.com_arrangement'].search([('operation', '=', self.operation)])            
             body = self.requestBody
             ## API call
-            answer = arrangement._api_launch_post(body, record.originDocId + '_Resent')
+            answer = arrangement._api_launch_post(body, record.originDocId + '_Resent') ## ne fonctionne pas car texte au lieu de véritable json avec idention (hypothèse)
             ## update resend date
             record.resendDate = fields.datetime.now()
